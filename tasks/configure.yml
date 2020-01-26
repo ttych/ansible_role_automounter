@@ -1,0 +1,46 @@
+---
+
+- name: configure autofs on Linux
+  block:
+    - name: add references in auto.master
+      lineinfile:
+        path: /etc/auto.master
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      with_items:
+        - regexp: '^/home/nfs\s'
+          line: '/home/nfs /etc/auto.home'
+        - regexp: '^/net\s'
+          line: '/net /etc/auto.net'
+      register: autofs_master_status
+
+    - name: install auto.home
+      copy:
+        owner: root
+        group: root
+        mode: 0644
+        src: autofs/auto.home
+        dest: /etc/auto.home
+      register: autofs_home_status
+
+    - name: enable autofs service
+      service:
+        name: autofs
+        enabled: yes
+        state: started
+
+    - name: restart service
+      service:
+        name: autofs
+        state: restarted
+      when: autofs_master_status.changed or autofs_home_status.changed
+
+  when: ansible_system == 'Linux'
+
+
+- name: configure autofs on FreeBSD
+  block:
+    - debug:
+        msg: "FIXME"
+
+  when: ansible_system == 'FreeBSD'

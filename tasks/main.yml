@@ -1,2 +1,14 @@
 ---
-# tasks file for ansible_role_automounter
+
+- block:
+    - include_tasks: context.yml
+
+    - include_tasks: install.yml
+
+    - include_tasks: configure.yml
+
+  when: want_automounter
+
+- name: set has_automounter
+  set_fact:
+    has_automounter: "{{ want_automounter }}"

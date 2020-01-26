@@ -1,0 +1,7 @@
+---
+
+- name: install automounter packages
+  package:
+    name: '{{ automounter_packages }}'
+    state: 'present'
+  register: automounter_install
