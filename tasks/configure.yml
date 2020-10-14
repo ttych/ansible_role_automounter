@@ -38,7 +38,7 @@
   when: ansible_system == 'Linux'
 
 
-- name: configure autofs on FreeBSD
+- name: configure automounter on FreeBSD
   block:
     - debug:
         msg: "FIXME"
